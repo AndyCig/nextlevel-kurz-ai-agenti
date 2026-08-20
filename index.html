@@ -218,6 +218,7 @@
           <a href="#financovani" class="btn btn-ghost">Chci ověřit možnost podpory</a>
         </div>
         <p class="fine-print">Možnost získání příspěvku se vždy řídí aktuálními podmínkami příslušného dotačního programu a rozhodnutím poskytovatele podpory.</p>
+        <!-- TODO(claude-code): oba CTA míří na #kontakt / #financovani (funkční kotvy). Formulář v sekci #kontakt zatím data nikam neodesílá — viz TODO u <form id="contact-form">. -->
       </div>
 
       <div class="console">
@@ -348,7 +349,8 @@
       </div>
       <div class="modules-foot">
         <div class="modules-total">Celkem: <b>56 hodin</b> · minimální docházka <b>80 %</b></div>
-        <a href="#" class="btn btn-ghost">Stáhnout podrobný harmonogram</a>
+        <!-- TODO(claude-code): žádný PDF harmonogram zatím neexistuje. Dočasně vede na mailto se žádostí; nahradit skutečným odkazem na PDF, jakmile bude k dispozici. -->
+        <a href="mailto:info@nextlevelimpact.eu?subject=%C5%BD%C3%A1dost%20o%20podrobn%C3%BD%20harmonogram%20kurzu" class="btn btn-ghost">Stáhnout podrobný harmonogram</a>
       </div>
     </div>
   </section>
@@ -539,7 +541,8 @@
       <p class="hero-callout">Od jednotlivých promptů k vlastnímu funkčnímu AI systému.</p>
       <div class="cta-row">
         <a href="#kontakt" class="btn btn-primary">Chci probrat program pro náš tým</a>
-        <a href="#" class="btn btn-ghost">Stáhnout podrobný harmonogram</a>
+        <!-- TODO(claude-code): duplicitní odkaz na harmonogram, viz TODO výše u sekce #program — sjednotit cíl. -->
+        <a href="mailto:info@nextlevelimpact.eu?subject=%C5%BD%C3%A1dost%20o%20podrobn%C3%BD%20harmonogram%20kurzu" class="btn btn-ghost">Stáhnout podrobný harmonogram</a>
       </div>
     </div>
   </section>
@@ -553,19 +556,30 @@
           <h2>Pojďme zjistit, kde může AI nejvíc pomoci právě vám</h2>
           <p style="color:var(--slate);font-size:14.5px;">Ozveme se vám a společně probereme vhodné nastavení programu pro váš tým, pracovní procesy a očekávané výsledky.</p>
         </div>
-        <form id="contact-form">
+        <!--
+          TODO(claude-code): formulář zatím NEODESÍLÁ data nikam — chybí backend/endpoint.
+          Doporučený nejrychlejší postup: Formspree nebo Web3Forms (zdarma, žádný vlastní server):
+            1) založit účet, získat form endpoint URL
+            2) nastavit na <form> níže: action="https://formspree.io/f/XXXXXXX" method="POST"
+            3) po odeslání buď necháme service redirect na vlastní /dekujeme.html, nebo přes
+               fetch() s preventDefault() zobrazíme #thanks a formulář schováme
+          Alternativy: Cloudflare Pages Function (vlastní /api/contact) nebo napojení na SmartEmailing
+          (firma ho už používá pro e-mailing — viz DKIM/CNAME záznamy na doméně).
+          Než bude endpoint hotový, formulář nech needitovatelný/needeploy, ať nepůsobí jako funkční.
+        -->
+        <form id="contact-form" action="" method="POST">
           <div class="field-row">
-            <div class="field"><label>Jméno a příjmení</label><input type="text" required></div>
-            <div class="field"><label>Firma</label><input type="text" required></div>
+            <div class="field"><label>Jméno a příjmení</label><input type="text" name="jmeno" required></div>
+            <div class="field"><label>Firma</label><input type="text" name="firma" required></div>
           </div>
           <div class="field-row">
-            <div class="field"><label>E-mail</label><input type="email" required></div>
-            <div class="field"><label>Telefon — nepovinné</label><input type="tel"></div>
+            <div class="field"><label>E-mail</label><input type="email" name="email" required></div>
+            <div class="field"><label>Telefon — nepovinné</label><input type="tel" name="telefon"></div>
           </div>
-          <div class="field"><label>Přibližný počet účastníků</label><input type="text"></div>
-          <div class="field"><label>Co chcete pomocí AI ve firmě zefektivnit?</label><textarea></textarea></div>
+          <div class="field"><label>Přibližný počet účastníků</label><input type="text" name="pocet_ucastniku"></div>
+          <div class="field"><label>Co chcete pomocí AI ve firmě zefektivnit?</label><textarea name="zprava"></textarea></div>
           <div class="checkbox-row">
-            <input type="checkbox" id="dotace-check">
+            <input type="checkbox" id="dotace-check" name="zajem_o_dotace">
             <label for="dotace-check">Mám zájem také o informace k možnosti financování vzdělávání</label>
           </div>
           <button type="submit" class="btn btn-primary">Chci probrat možnosti</button>
@@ -589,13 +603,12 @@
   </div>
 </footer>
 
-<script>
-  document.getElementById('contact-form').addEventListener('submit', function(e){
-    e.preventDefault();
-    document.getElementById('thanks').classList.add('show');
-    this.reset();
-  });
-</script>
+<!--
+  TODO(claude-code): JS pro odeslání formuláře byl záměrně odstraněn — dřívější verze
+  jen předstírala úspěch (preventDefault + zobrazení #thanks bez skutečného odeslání).
+  Až bude nastavený action= endpoint (viz TODO u <form> výše), přidat sem fetch()
+  volání na ten endpoint a #thanks zobrazit až po skutečně úspěšné odpovědi (ne dřív).
+-->
 
 </body>
 </html>
