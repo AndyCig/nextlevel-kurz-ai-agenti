@@ -151,20 +151,15 @@
   details[open] summary .plus{transform:rotate(45deg);}
   details .faq-a{padding:0 0 22px;font-size:14.5px;color:var(--slate);line-height:1.6;max-width:70ch;}
 
-  /* ---------- contact form ---------- */
+  /* ---------- contact ---------- */
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start;}
   @media (max-width:800px){ .form-grid{grid-template-columns:1fr;} }
-  .field{margin-bottom:16px;}
-  .field label{display:block;font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--slate);margin-bottom:7px;}
-  .field input, .field textarea{width:100%;border:1px solid var(--line);background:var(--paper);padding:11px 13px;font-family:'IBM Plex Sans';font-size:14px;color:var(--ink);border-radius:2px;}
-  .field input:focus, .field textarea:focus{outline:none;border-color:var(--brass);}
-  .field textarea{resize:vertical;min-height:80px;}
-  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  @media (max-width:480px){ .field-row{grid-template-columns:1fr;} }
-  .checkbox-row{display:flex;align-items:flex-start;gap:10px;margin:18px 0 22px;font-size:13.5px;color:var(--slate);}
-  .checkbox-row input{margin-top:3px;}
-  #thanks{display:none;font-size:14px;color:var(--moss);font-style:italic;margin-top:16px;}
-  #thanks.show{display:block;}
+  .contact-actions{display:flex;flex-direction:column;}
+  .contact-line{display:flex;flex-direction:column;gap:5px;padding:16px 0;border-bottom:1px solid var(--line);}
+  .contact-line:first-child{border-top:1px solid var(--line);}
+  .contact-line .contact-label{font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--slate);}
+  .contact-line .contact-value{font-family:'Fraunces';font-size:20px;color:var(--ink);transition:color .2s;}
+  a.contact-line:hover .contact-value{color:var(--brass);}
 
   /* ---------- closing ---------- */
   .closing{text-align:center;padding:84px 0 92px;}
@@ -190,12 +185,12 @@
   <div class="header-inner">
     <div class="logo"><span class="mark"></span>NextLevel Impact</div>
     <nav>
-      <a href="#">Next.Level Academy</a>
-      <a href="#">Vyjednávání</a>
-      <a href="#">Rodinné firmy</a>
-      <a href="#">Rodinná kontinuita</a>
-      <a href="#" class="current">AI Agenti</a>
-      <a href="#">O nás</a>
+      <a href="https://nextlevelimpact.cz/">Next.Level Academy</a>
+      <a href="https://nextlevelimpact.cz/">Vyjednávání</a>
+      <a href="https://nextlevelimpact.cz/">Rodinné firmy</a>
+      <a href="https://nextlevelimpact.cz/">Rodinná kontinuita</a>
+      <a href="/" class="current">AI Agenti</a>
+      <a href="https://nextlevelimpact.cz/">O nás</a>
     </nav>
     <button class="nav-toggle">☰</button>
   </div>
@@ -218,7 +213,6 @@
           <a href="#financovani" class="btn btn-ghost">Chci ověřit možnost podpory</a>
         </div>
         <p class="fine-print">Možnost získání příspěvku se vždy řídí aktuálními podmínkami příslušného dotačního programu a rozhodnutím poskytovatele podpory.</p>
-        <!-- TODO(claude-code): oba CTA míří na #kontakt / #financovani (funkční kotvy). Formulář v sekci #kontakt zatím data nikam neodesílá — viz TODO u <form id="contact-form">. -->
       </div>
 
       <div class="console">
@@ -349,8 +343,6 @@
       </div>
       <div class="modules-foot">
         <div class="modules-total">Celkem: <b>56 hodin</b> · minimální docházka <b>80 %</b></div>
-        <!-- TODO(claude-code): žádný PDF harmonogram zatím neexistuje. Dočasně vede na mailto se žádostí; nahradit skutečným odkazem na PDF, jakmile bude k dispozici. -->
-        <a href="mailto:info@nextlevelimpact.eu?subject=%C5%BD%C3%A1dost%20o%20podrobn%C3%BD%20harmonogram%20kurzu" class="btn btn-ghost">Stáhnout podrobný harmonogram</a>
       </div>
     </div>
   </section>
@@ -541,8 +533,6 @@
       <p class="hero-callout">Od jednotlivých promptů k vlastnímu funkčnímu AI systému.</p>
       <div class="cta-row">
         <a href="#kontakt" class="btn btn-primary">Chci probrat program pro náš tým</a>
-        <!-- TODO(claude-code): duplicitní odkaz na harmonogram, viz TODO výše u sekce #program — sjednotit cíl. -->
-        <a href="mailto:info@nextlevelimpact.eu?subject=%C5%BD%C3%A1dost%20o%20podrobn%C3%BD%20harmonogram%20kurzu" class="btn btn-ghost">Stáhnout podrobný harmonogram</a>
       </div>
     </div>
   </section>
@@ -552,39 +542,23 @@
     <div class="wrap">
       <div class="form-grid">
         <div>
-          <div class="eyebrow">Kontaktní formulář</div>
+          <div class="eyebrow">Kontakt</div>
           <h2>Pojďme zjistit, kde může AI nejvíc pomoci právě vám</h2>
-          <p style="color:var(--slate);font-size:14.5px;">Ozveme se vám a společně probereme vhodné nastavení programu pro váš tým, pracovní procesy a očekávané výsledky.</p>
+          <p style="color:var(--slate);font-size:14.5px;">Napište nebo zavolejte — společně probereme vhodné nastavení programu pro váš tým, pracovní procesy a očekávané výsledky.</p>
         </div>
-        <!--
-          TODO(claude-code): formulář zatím NEODESÍLÁ data nikam — chybí backend/endpoint.
-          Doporučený nejrychlejší postup: Formspree nebo Web3Forms (zdarma, žádný vlastní server):
-            1) založit účet, získat form endpoint URL
-            2) nastavit na <form> níže: action="https://formspree.io/f/XXXXXXX" method="POST"
-            3) po odeslání buď necháme service redirect na vlastní /dekujeme.html, nebo přes
-               fetch() s preventDefault() zobrazíme #thanks a formulář schováme
-          Alternativy: Cloudflare Pages Function (vlastní /api/contact) nebo napojení na SmartEmailing
-          (firma ho už používá pro e-mailing — viz DKIM/CNAME záznamy na doméně).
-          Než bude endpoint hotový, formulář nech needitovatelný/needeploy, ať nepůsobí jako funkční.
-        -->
-        <form id="contact-form" action="" method="POST">
-          <div class="field-row">
-            <div class="field"><label>Jméno a příjmení</label><input type="text" name="jmeno" required></div>
-            <div class="field"><label>Firma</label><input type="text" name="firma" required></div>
+        <div class="contact-actions">
+          <a class="contact-line" href="mailto:info@nextlevelimpact.eu">
+            <span class="contact-label">Napište nám</span>
+            <span class="contact-value">info@nextlevelimpact.eu</span>
+          </a>
+          <a class="contact-line" href="tel:+420602300220">
+            <span class="contact-label">Zavolejte nám</span>
+            <span class="contact-value">602 300 220</span>
+          </a>
+          <div class="cta-row" style="margin-top:24px;">
+            <a href="mailto:info@nextlevelimpact.eu?subject=Z%C3%A1jem%20o%20kurz%20AI%20agent%C5%AF%20pro%20t%C3%BDm&body=Dobr%C3%BD%20den%2C%0Am%C3%A1me%20z%C3%A1jem%20o%20program%20Konfigurace%20a%20promptov%C3%A1n%C3%AD%20AI%20agent%C5%AF.%0A%0AJm%C3%A9no%20a%20p%C5%99%C3%ADjmen%C3%AD%3A%0AFirma%3A%0AP%C5%99ibli%C5%BEn%C3%BD%20po%C4%8Det%20%C3%BA%C4%8Dastn%C3%ADk%C5%AF%3A%0ACo%20chceme%20pomoc%C3%AD%20AI%20zefektivnit%3A%0AZ%C3%A1jem%20o%20informace%20k%20financov%C3%A1n%C3%AD%20%28ano/ne%29%3A%0A%0AD%C4%9Bkujeme." class="btn btn-primary">Napsat e-mail k programu</a>
           </div>
-          <div class="field-row">
-            <div class="field"><label>E-mail</label><input type="email" name="email" required></div>
-            <div class="field"><label>Telefon — nepovinné</label><input type="tel" name="telefon"></div>
-          </div>
-          <div class="field"><label>Přibližný počet účastníků</label><input type="text" name="pocet_ucastniku"></div>
-          <div class="field"><label>Co chcete pomocí AI ve firmě zefektivnit?</label><textarea name="zprava"></textarea></div>
-          <div class="checkbox-row">
-            <input type="checkbox" id="dotace-check" name="zajem_o_dotace">
-            <label for="dotace-check">Mám zájem také o informace k možnosti financování vzdělávání</label>
-          </div>
-          <button type="submit" class="btn btn-primary">Chci probrat možnosti</button>
-          <p id="thanks">Děkujeme. Ozveme se vám a společně probereme vhodné nastavení programu pro váš tým, pracovní procesy a očekávané výsledky.</p>
-        </form>
+        </div>
       </div>
     </div>
   </section>
@@ -593,22 +567,12 @@
 
 <footer>
   <div class="wrap foot-inner">
-    <div>NextLevel Impact s.r.o., Ke Koupališti 1790/12, Praha 8<br>info@nextlevelimpact.eu · 602 300 220</div>
+    <div>NextLevel Impact s.r.o., Ke Koupališti 1790/12, Praha 8<br><a href="mailto:info@nextlevelimpact.eu">info@nextlevelimpact.eu</a> · <a href="tel:+420602300220">602 300 220</a></div>
     <div class="foot-links">
-      <a href="#">Facilitace</a>
-      <a href="#">Certifikáty</a>
-      <a href="#">Obchodní podmínky</a>
-      <a href="#">GDPR</a>
+      <a href="https://nextlevelimpact.cz/">nextlevelimpact.cz</a>
     </div>
   </div>
 </footer>
-
-<!--
-  TODO(claude-code): JS pro odeslání formuláře byl záměrně odstraněn — dřívější verze
-  jen předstírala úspěch (preventDefault + zobrazení #thanks bez skutečného odeslání).
-  Až bude nastavený action= endpoint (viz TODO u <form> výše), přidat sem fetch()
-  volání na ten endpoint a #thanks zobrazit až po skutečně úspěšné odpovědi (ne dřív).
--->
 
 </body>
 </html>
