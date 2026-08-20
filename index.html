@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konfigurace a promptování AI agentů — NextLevel Impact</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#161A22; --ink-soft:#2B303B; --paper:#F6F3EC; --paper-raise:#EFEAE0;
+    --slate:#5B5F6B; --line:#DAD3C2; --brass:#9C7A2E; --brass-dim:#C9A65C;
+    --moss:#4B5D45; --white:#FFFFFF; --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 32px;}
+  ul{margin:0;padding:0;list-style:none;}
+
+  /* ---------- HEADER ---------- */
+  header{border-bottom:1px solid var(--line);background:var(--paper);position:sticky;top:0;z-index:50;}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;max-width:1120px;margin:0 auto;}
+  .logo{font-family:'Fraunces',serif;font-size:19px;font-weight:600;display:flex;align-items:center;gap:10px;}
+  .logo .mark{width:9px;height:9px;background:var(--brass);border-radius:50%;display:inline-block;}
+  nav{display:flex;align-items:center;gap:26px;}
+  nav a{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--slate);font-weight:500;padding-bottom:3px;border-bottom:1px solid transparent;transition:color .2s,border-color .2s;}
+  nav a:hover{color:var(--ink);border-color:var(--brass);}
+  nav a.current{color:var(--ink);border-color:var(--brass);}
+  .nav-toggle{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--ink);}
+  @media (max-width:900px){ nav{display:none;} .nav-toggle{display:block;} }
+
+  /* ---------- generic type ---------- */
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--brass);display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .eyebrow::before{content:'';width:20px;height:1px;background:var(--brass);}
+  .eyebrow.center{justify-content:center;}
+  .eyebrow.center::before{display:none;}
+  h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(30px,4vw,46px);line-height:1.1;letter-spacing:-.01em;margin:0 0 20px;}
+  h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(23px,2.4vw,30px);line-height:1.2;margin:0 0 14px;}
+  h3{font-family:'Fraunces',serif;font-weight:500;font-size:18px;margin:0 0 8px;}
+  p{line-height:1.65;}
+  .section-head{max-width:660px;margin-bottom:40px;}
+  .section-head p{color:var(--slate);font-size:15px;margin:0;}
+  section{padding:66px 0;}
+  .band{background:var(--paper-raise);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .band-ink{background:var(--ink);color:var(--paper);}
+  .band-ink .eyebrow{color:var(--brass-dim);}
+  .band-ink .eyebrow::before{background:var(--brass-dim);}
+  .band-ink h2{color:var(--paper);}
+  .band-ink .section-head p{color:rgba(246,243,236,.68);}
+
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 24px;font-size:13px;letter-spacing:.02em;font-weight:500;border-radius:var(--radius);transition:background .2s,color .2s,border-color .2s;cursor:pointer;border:none;font-family:inherit;}
+  .btn-primary{background:var(--ink);color:var(--paper);}
+  .btn-primary:hover{background:var(--brass);}
+  .band-ink .btn-primary{background:var(--brass);color:var(--ink);}
+  .band-ink .btn-primary:hover{background:var(--brass-dim);}
+  .btn-ghost{border:1px solid var(--line);color:var(--ink);background:transparent;}
+  .btn-ghost:hover{border-color:var(--ink);}
+  .band-ink .btn-ghost{border-color:rgba(246,243,236,.3);color:var(--paper);}
+  .band-ink .btn-ghost:hover{border-color:var(--paper);}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
+  .fine-print{font-size:12px;color:var(--slate);font-style:italic;margin-top:14px;max-width:52ch;}
+  .band-ink .fine-print{color:rgba(246,243,236,.55);}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:64px 0 76px;}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;}
+  @media (max-width:920px){ .hero-grid{grid-template-columns:1fr;gap:44px;} }
+  .lede{font-size:16.5px;line-height:1.65;color:var(--slate);max-width:48ch;margin:0 0 18px;}
+  .hero-callout{font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--ink-soft);margin:0 0 22px;}
+  .meta-line{font-family:'IBM Plex Mono';font-size:12px;color:var(--brass);letter-spacing:.02em;margin-bottom:26px;}
+
+  /* console / signature */
+  .console{background:var(--ink);color:var(--paper);border-radius:6px;padding:26px 24px;box-shadow:0 24px 60px -20px rgba(22,26,34,.45);}
+  .console-top{font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.08em;color:rgba(246,243,236,.45);text-transform:uppercase;margin-bottom:18px;display:flex;justify-content:space-between;}
+  .console-top .live{color:var(--brass-dim);}
+  .flow{display:flex;flex-direction:column;gap:0;}
+  .flow-step{display:flex;align-items:baseline;gap:12px;padding:9px 0;border-bottom:1px solid rgba(246,243,236,.08);}
+  .flow-step:last-child{border-bottom:none;}
+  .flow-step .n{font-family:'IBM Plex Mono';font-size:11px;color:var(--brass-dim);width:16px;flex-shrink:0;}
+  .flow-step .t{font-family:'IBM Plex Mono';font-size:13px;letter-spacing:.03em;}
+  .console-foot{margin-top:18px;padding-top:16px;border-top:1px dashed rgba(246,243,236,.15);font-size:12.5px;color:rgba(246,243,236,.6);line-height:1.55;}
+
+  /* ---------- two-col benefit lists ---------- */
+  .intro-text{max-width:66ch;font-size:15.5px;color:var(--slate);margin-bottom:44px;}
+  .intro-text strong{color:var(--ink);}
+  .benefit-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+  @media (max-width:760px){ .benefit-grid{grid-template-columns:1fr;} }
+  .benefit-col h3{font-size:16px;margin-bottom:14px;}
+  .benefit-col ul li{position:relative;padding-left:18px;margin-bottom:10px;font-size:14.5px;line-height:1.55;color:var(--slate);}
+  .benefit-col ul li::before{content:'';position:absolute;left:0;top:8px;width:6px;height:1px;background:var(--brass);}
+
+  /* ---------- pipeline flow (horizontal chips) ---------- */
+  .pipeline{display:flex;flex-wrap:wrap;align-items:center;gap:0;margin:28px 0;}
+  .pchip{font-family:'IBM Plex Mono';font-size:12px;letter-spacing:.04em;border:1px solid var(--line);padding:9px 14px;border-radius:20px;background:var(--paper);}
+  .parrow{color:var(--brass);padding:0 10px;font-size:13px;}
+  .pipeline-note{font-size:14px;color:var(--slate);max-width:56ch;}
+  .pipeline-note strong{color:var(--ink);}
+
+  /* ---------- checklist ---------- */
+  .checklist{display:grid;grid-template-columns:1fr 1fr;gap:10px 28px;}
+  @media (max-width:720px){ .checklist{grid-template-columns:1fr;} }
+  .checklist li{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;line-height:1.5;color:var(--ink-soft);padding:8px 0;border-bottom:1px solid var(--line);}
+  .checklist li .mk{font-family:'IBM Plex Mono';color:var(--brass);flex-shrink:0;font-size:13px;}
+
+  /* ---------- modules (numbered real sequence) ---------- */
+  .modules{display:flex;flex-direction:column;}
+  .module{display:grid;grid-template-columns:70px 110px 1fr;gap:20px;padding:24px 0;border-top:1px solid var(--line);}
+  .modules .module:last-child{border-bottom:1px solid var(--line);}
+  @media (max-width:700px){ .module{grid-template-columns:40px 1fr;} .module .hrs{grid-column:2;order:3;} }
+  .module .num{font-family:'IBM Plex Mono';font-size:13px;color:var(--brass);padding-top:2px;}
+  .module .hrs{font-family:'IBM Plex Mono';font-size:12px;color:var(--slate);padding-top:3px;}
+  .module .hrs b{color:var(--ink);font-weight:600;}
+  .module h3{font-size:17px;margin-bottom:6px;}
+  .module p{font-size:14px;color:var(--slate);margin:0;max-width:62ch;}
+  .modules-foot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-top:30px;padding-top:24px;border-top:1px solid var(--line);}
+  .modules-total{font-family:'IBM Plex Mono';font-size:12.5px;color:var(--slate);}
+  .modules-total b{color:var(--ink);}
+
+  /* ---------- agent cards ---------- */
+  .agent-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+  @media (max-width:700px){ .agent-grid{grid-template-columns:1fr;} }
+  .agent-card{background:var(--paper);padding:28px 26px;}
+  .agent-card .tag{font-family:'IBM Plex Mono';font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--brass);background:var(--paper-raise);display:inline-block;padding:3px 8px;border-radius:20px;margin-bottom:12px;}
+  .agent-card h3{font-size:17px;margin-bottom:8px;}
+  .agent-card p{font-size:14px;color:var(--slate);margin:0;}
+  .scenario-note{margin-top:24px;font-size:13.5px;color:var(--slate);font-style:italic;max-width:70ch;}
+
+  /* ---------- audience ---------- */
+  .aud-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+  @media (max-width:700px){ .aud-grid{grid-template-columns:1fr;} }
+  .aud-card{background:var(--paper-raise);padding:28px 26px;}
+  .aud-card h3{font-size:17px;margin-bottom:8px;}
+  .aud-card p{font-size:14px;color:var(--slate);margin:0;}
+  .audience-footnote{margin-top:26px;padding:16px 18px;border-left:2px solid var(--brass);font-size:14px;color:var(--ink-soft);background:var(--paper);}
+
+  /* ---------- takeaways ---------- */
+  .takeaway-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 28px;margin-bottom:30px;}
+  @media (max-width:720px){ .takeaway-grid{grid-template-columns:1fr;} }
+  .takeaway-grid li{font-size:14.5px;color:var(--ink-soft);padding:8px 0;border-bottom:1px solid var(--line);}
+
+  /* ---------- FAQ ---------- */
+  .faq{border-top:1px solid var(--line);}
+  details{border-bottom:1px solid var(--line);}
+  details summary{list-style:none;cursor:pointer;padding:20px 0;display:flex;justify-content:space-between;align-items:center;gap:20px;font-family:'Fraunces';font-size:16px;font-weight:500;}
+  details summary::-webkit-details-marker{display:none;}
+  details summary .plus{font-family:'IBM Plex Mono';color:var(--brass);font-size:18px;transition:transform .2s;flex-shrink:0;}
+  details[open] summary .plus{transform:rotate(45deg);}
+  details .faq-a{padding:0 0 22px;font-size:14.5px;color:var(--slate);line-height:1.6;max-width:70ch;}
+
+  /* ---------- contact form ---------- */
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start;}
+  @media (max-width:800px){ .form-grid{grid-template-columns:1fr;} }
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--slate);margin-bottom:7px;}
+  .field input, .field textarea{width:100%;border:1px solid var(--line);background:var(--paper);padding:11px 13px;font-family:'IBM Plex Sans';font-size:14px;color:var(--ink);border-radius:2px;}
+  .field input:focus, .field textarea:focus{outline:none;border-color:var(--brass);}
+  .field textarea{resize:vertical;min-height:80px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media (max-width:480px){ .field-row{grid-template-columns:1fr;} }
+  .checkbox-row{display:flex;align-items:flex-start;gap:10px;margin:18px 0 22px;font-size:13.5px;color:var(--slate);}
+  .checkbox-row input{margin-top:3px;}
+  #thanks{display:none;font-size:14px;color:var(--moss);font-style:italic;margin-top:16px;}
+  #thanks.show{display:block;}
+
+  /* ---------- closing ---------- */
+  .closing{text-align:center;padding:84px 0 92px;}
+  .closing h2{font-size:clamp(25px,3.2vw,36px);max-width:22ch;margin:0 auto 16px;}
+  .closing .lede{margin:0 auto 30px;text-align:center;}
+  .closing .cta-row{justify-content:center;}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line);padding:34px 0;}
+  .foot-inner{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--slate);}
+  .foot-links{display:flex;gap:18px;flex-wrap:wrap;}
+  .foot-links a{letter-spacing:.05em;text-transform:uppercase;font-size:11px;color:var(--slate);}
+  .foot-links a:hover{color:var(--ink);}
+
+  .placeholder-note{padding:9px 32px;font-family:'IBM Plex Mono';font-size:10.5px;color:var(--brass);background:var(--paper-raise);border-bottom:1px solid var(--line);text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="placeholder-note">MOCKUP podle dodaného obsahu — vizuál a rozložení k připomínkování, texty jsou z vašeho podkladu</div>
+
+<header>
+  <div class="header-inner">
+    <div class="logo"><span class="mark"></span>NextLevel Impact</div>
+    <nav>
+      <a href="#">Next.Level Academy</a>
+      <a href="#">Vyjednávání</a>
+      <a href="#">Rodinné firmy</a>
+      <a href="#">Rodinná kontinuita</a>
+      <a href="#" class="current">AI Agenti</a>
+      <a href="#">O nás</a>
+    </nav>
+    <button class="nav-toggle">☰</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">Next.Level Academy — nový program</div>
+        <h1>Konfigurace a promptování AI agentů pro zvýšení efektivity obchodních a týmových procesů</h1>
+        <p class="lede">6denní praktický vzdělávací program pro firmy a týmy, které chtějí AI systematicky zapojit do obchodu, projektového řízení a každodenní týmové práce.</p>
+        <p class="hero-callout">Nejde o kurz chytrých promptů.</p>
+        <p class="lede">Cílem je získat přenositelné digitální kompetence, díky kterým dokážete AI využívat smysluplně, bezpečně a opakovaně v reálné pracovní praxi.</p>
+        <div class="meta-line">6 výukových dnů · 56 hodin praktického vzdělávání · možnost využití dotační podpory</div>
+        <div class="cta-row">
+          <a href="#kontakt" class="btn btn-primary">Chci probrat program pro náš tým</a>
+          <a href="#financovani" class="btn btn-ghost">Chci ověřit možnost podpory</a>
+        </div>
+        <p class="fine-print">Možnost získání příspěvku se vždy řídí aktuálními podmínkami příslušného dotačního programu a rozhodnutím poskytovatele podpory.</p>
+      </div>
+
+      <div class="console">
+        <div class="console-top"><span>Princip práce s agentem</span><span class="live">● live</span></div>
+        <div class="flow">
+          <div class="flow-step"><span class="n">01</span><span class="t">CÍL</span></div>
+          <div class="flow-step"><span class="n">02</span><span class="t">ROLE</span></div>
+          <div class="flow-step"><span class="n">03</span><span class="t">KONTEXT</span></div>
+          <div class="flow-step"><span class="n">04</span><span class="t">INSTRUKCE</span></div>
+          <div class="flow-step"><span class="n">05</span><span class="t">ZNALOSTI</span></div>
+          <div class="flow-step"><span class="n">06</span><span class="t">AKCE</span></div>
+          <div class="flow-step"><span class="n">07</span><span class="t">KONTROLA</span></div>
+        </div>
+        <div class="console-foot">Výsledkem není znalost jednoho nástroje. Výsledkem je schopnost princip přenést do dalších situací a AI platforem.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MÉNĚ RUTINY -->
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Proč to dává smysl</div>
+        <h2>Méně rutiny. Lepší kontrola. Rychlejší cesta k výsledku.</h2>
+      </div>
+      <p class="intro-text">AI může napsat e-mail nebo shrnout dokument. To je ale pouze začátek. Skutečný přínos přichází ve chvíli, kdy jí dokážete správně zadat cíl, předat potřebný kontext, nastavit pravidla a vytvořit z ní <strong>opakovaně použitelný nástroj pro konkrétní pracovní proces</strong>. Program je zaměřen především na využití AI při práci s obchodními příležitostmi, projektovým řízením, informacemi a týmovou komunikací — se zaměřením na zkrácení prodejního procesu, lepší řízení funnelu a efektivnější sdílení informací napříč týmem.</p>
+      <div class="benefit-grid">
+        <div class="benefit-col">
+          <h3>Zkrácení obchodního procesu</h3>
+          <ul>
+            <li>Méně času stráveného přípravou podkladů a opakovanými administrativními činnostmi.</li>
+            <li>Rychlejší kvalifikace obchodních příležitostí.</li>
+            <li>Efektivnější správa projektového funnelu.</li>
+            <li>Snazší orientace v informacích, otevřených bodech, dalších krocích a podkladech potřebných pro rozhodování.</li>
+          </ul>
+        </div>
+        <div class="benefit-col">
+          <h3>Efektivnější týmová komunikace</h3>
+          <ul>
+            <li>Jasnější předávání kontextu a méně času stráveného hledáním toho, co už někde zaznělo.</li>
+            <li>AI pomáhá připravovat informace, vyhodnocovat kontext a strukturovat další postup.</li>
+            <li>Podpora systematické práce s jednotlivými příležitostmi.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OD PROMPTU K AGENTOVI -->
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Princip programu</div>
+        <h2>Od promptu k funkčnímu AI agentovi</h2>
+        <p>Dobře napsaný prompt pomůže vyřešit jeden úkol. Dobře nakonfigurovaný AI agent dokáže podle definovaného cíle, pravidel a znalostí podporovat stejný typ práce opakovaně.</p>
+      </div>
+      <p class="pipeline-note">V průběhu programu se účastníci neposouvají pouze v promptování. Postupně se učí vytvářet <strong>vlastní AI agenty</strong>, pracovat s jejich personou a znalostní bází, testovat jejich chování a následně vytvářet systémy, ve kterých spolupracuje více specializovaných agentů.</p>
+      <div class="pipeline">
+        <span class="pchip">CÍL</span><span class="parrow">→</span>
+        <span class="pchip">ROLE</span><span class="parrow">→</span>
+        <span class="pchip">KONTEXT</span><span class="parrow">→</span>
+        <span class="pchip">INSTRUKCE</span><span class="parrow">→</span>
+        <span class="pchip">ZNALOSTI</span><span class="parrow">→</span>
+        <span class="pchip">AKCE</span><span class="parrow">→</span>
+        <span class="pchip">KONTROLA</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CO BUDETE UMĚT -->
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Výstupy programu</div>
+        <h2>Co budete po absolvování programu umět</h2>
+      </div>
+      <ul class="checklist">
+        <li><span class="mk">→</span>efektivně formulovat zadání a prompty pro komplexnější pracovní úlohy</li>
+        <li><span class="mk">→</span>nakonfigurovat vlastního AI agenta pro konkrétní pracovní scénář</li>
+        <li><span class="mk">→</span>definovat jeho účel, roli, personu a pravidla práce</li>
+        <li><span class="mk">→</span>pracovat se znalostní bází a kontextem</li>
+        <li><span class="mk">→</span>vytvářet šablony pro opakované použití</li>
+        <li><span class="mk">→</span>testovat AI agenta na různých platformách</li>
+        <li><span class="mk">→</span>identifikovat chyby a systematicky upravovat konfiguraci</li>
+        <li><span class="mk">→</span>navrhnout spolupráci hlavního agenta a specializovaného subagenta</li>
+        <li><span class="mk">→</span>vytvářet systémy s více funkčními AI agenty</li>
+        <li><span class="mk">→</span>posuzovat bezpečnost práce s informacemi a daty</li>
+        <li><span class="mk">→</span>kontrolovat kvalitu a použitelnost AI výstupů</li>
+        <li><span class="mk">→</span>aplikovat vytvořený systém na vlastní obchodní, projektový nebo týmový proces</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PROGRAM VZDĚLÁVÁNÍ -->
+  <section id="program">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Struktura programu</div>
+        <h2>56 hodin praktické výuky. Od základů až k vlastnímu agentnímu systému.</h2>
+        <p>Program má celkový rozsah 56 hodin a je rozdělen do pěti navazujících tematických celků. Minimální povinná docházka činí 80 %. Výuka kombinuje teoretické základy, praktické ukázky, samostatnou práci, testování a aplikaci na konkrétní pracovní scénáře.</p>
+      </div>
+      <div class="modules">
+        <div class="module">
+          <div class="num">01</div>
+          <div class="hrs"><b>7 hod.</b></div>
+          <div><h3>Obecné principy práce s AI nástroji</h3><p>Seznámení s fungováním AI agentů a modulů, principy efektivního promptování a konfigurací obecného AI agenta. Součástí je i bezpečnost, ochrana dat, vyhodnocování kvality výstupů a praktické procvičení.</p></div>
+        </div>
+        <div class="module">
+          <div class="num">02</div>
+          <div class="hrs"><b>12,5 hod.</b></div>
+          <div><h3>Konfigurace vlastního AI agenta</h3><p>Vytvoření vlastního AI agenta pro opakovanou simulaci konkrétního pracovního scénáře — definice účelu a persony, znalostní báze, šablona pro opakované použití. Ověření na dvou platformách a vyhodnocení rozdílů mezi prostředími.</p></div>
+        </div>
+        <div class="module">
+          <div class="num">03</div>
+          <div class="hrs"><b>12,5 hod.</b></div>
+          <div><h3>Agentní systém s jedním subagentem</h3><p>Posun k systému, kde hlavní agent deleguje úlohy specializovanému subagentovi. Práce s principem koordinátor–subagent, předáváním kontextu, znalostní bází a bezpečností dat. Testování na platformách s různou podporou agentních systémů.</p></div>
+        </div>
+        <div class="module">
+          <div class="num">04</div>
+          <div class="hrs"><b>12,5 hod.</b></div>
+          <div><h3>Agentní systém s více funkčními agenty</h3><p>Škálování řešení na více specializovaných agentů. Funkční schéma systému, znalostní databáze, šablony pro opakované použití a dynamická volba postupu. Spuštění, otestování a ověření přizpůsobitelnosti na jiný typ zadání.</p></div>
+        </div>
+        <div class="module">
+          <div class="num">05</div>
+          <div class="hrs"><b>11,5 hod.</b></div>
+          <div><h3>Ověření kompetence a přenos do vlastní praxe</h3><p>Samostatná aplikace získaných dovedností na vlastní pracovní scénář. Průběžné ladění řešení, zpětná vazba, krátká obhajoba zvoleného postupu a reflexe dalšího využití v praxi.</p></div>
+        </div>
+      </div>
+      <div class="modules-foot">
+        <div class="modules-total">Celkem: <b>56 hodin</b> · minimální docházka <b>80 %</b></div>
+        <a href="#" class="btn btn-ghost">Stáhnout podrobný harmonogram</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PŘÍKLADY AGENTŮ -->
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Reálné scénáře</div>
+        <h2>Neučíme AI ve vakuu. Pracujeme s reálnými procesy.</h2>
+        <p>Principy, které se v programu naučíte, můžete využít při celé řadě obchodních, projektových a týmových činností — například při vytváření řešení podobných těmto:</p>
+      </div>
+      <div class="agent-grid">
+        <div class="agent-card">
+          <div class="tag">Obchod</div>
+          <h3>Sales Preparation Agent</h3>
+          <p>Pomáhá připravit podklady pro obchodní jednání, strukturovat dostupné informace a připravit témata či otázky, kterým je vhodné se věnovat.</p>
+        </div>
+        <div class="agent-card">
+          <div class="tag">Obchod</div>
+          <h3>Follow-up Agent</h3>
+          <p>Pomáhá převést informace ze schůzky do přehledného shrnutí, dalších kroků a podkladů pro navazující komunikaci.</p>
+        </div>
+        <div class="agent-card">
+          <div class="tag">Projektové řízení</div>
+          <h3>Funnel Guardian</h3>
+          <p>Pomáhá strukturovat informace o obchodních příležitostech, identifikovat otevřené body a upozorňovat na situace, které vyžadují další krok.</p>
+        </div>
+        <div class="agent-card">
+          <div class="tag">Tým</div>
+          <h3>Team Flow Agent</h3>
+          <p>Pomáhá zpracovávat informace ze schůzek a projektů a vytvářet z nich přehled priorit, odpovědností a otevřených úkolů.</p>
+        </div>
+      </div>
+      <p class="scenario-note">Konkrétní praktické scénáře lze přizpůsobit pracovním procesům a potřebám daného týmu při zachování stanoveného vzdělávacího obsahu.</p>
+    </div>
+  </section>
+
+  <!-- PRO KOHO -->
+  <section id="pro-koho">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Pro koho je program určený</div>
+        <h2>Pro firmy a týmy, které chtějí AI zapojit systematicky.</h2>
+        <p>Program je vhodný pro firmy a týmy, které chtějí přejít od nahodilého využívání generativní AI k jejímu systematickému zapojení do pracovních procesů. Typicky jej využijí:</p>
+      </div>
+      <div class="aud-grid">
+        <div class="aud-card"><h3>Obchodníci a obchodní týmy</h3><p>Pro práci s informacemi o klientovi, obchodními příležitostmi, přípravou podkladů a dalšími kroky.</p></div>
+        <div class="aud-card"><h3>Manažeři a team leadeři</h3><p>Pro práci s informacemi, přípravu podkladů, podporu rozhodování a koordinaci práce.</p></div>
+        <div class="aud-card"><h3>Projektoví manažeři a projektové týmy</h3><p>Pro strukturování informací, práci s projektovým kontextem a podporu jednotlivých kroků procesu.</p></div>
+        <div class="aud-card"><h3>Specialisté napříč firmou</h3><p>Všude tam, kde se opakuje práce s informacemi, podklady, znalostmi, komunikací nebo rozhodováním.</p></div>
+      </div>
+      <div class="audience-footnote">Program není základním kurzem práce s počítačem. Je zaměřen na praktický rozvoj digitálních kompetencí v oblasti využívání AI.</div>
+    </div>
+  </section>
+
+  <!-- JAK VZDĚLÁVÁNÍ PROBÍHÁ -->
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Metoda výuky</div>
+        <h2>Jak vzdělávání probíhá</h2>
+        <p>Program je postavený na kombinaci krátkých teoretických bloků, praktických ukázek, řízených cvičení a samostatné práce. Účastníci principy průběžně aplikují a jejich řešení postupně roste od jednoduchého AI agenta až k systému více spolupracujících agentů.</p>
+      </div>
+      <div class="pipeline">
+        <span class="pchip">POCHOPIT</span><span class="parrow">→</span>
+        <span class="pchip">VYZKOUŠET</span><span class="parrow">→</span>
+        <span class="pchip">NAKONFIGUROVAT</span><span class="parrow">→</span>
+        <span class="pchip">OTESTOVAT</span><span class="parrow">→</span>
+        <span class="pchip">UPRAVIT</span><span class="parrow">→</span>
+        <span class="pchip">PŘENÉST DO PRAXE</span>
+      </div>
+      <p class="pipeline-note">Cílem není, aby účastník po šesti dnech pouze věděl, co je AI agent. <strong>Cílem je, aby dokázal sám navrhnout, nakonfigurovat, otestovat a dále rozvíjet AI řešení pro konkrétní pracovní situaci.</strong></p>
+    </div>
+  </section>
+
+  <!-- CO SI ODNESETE -->
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Konkrétní výstupy</div>
+        <h2>Co si z programu odnesete</h2>
+        <p>Především schopnost samostatně pracovat s AI jinak než formou nahodilého zadávání jednotlivých promptů. V průběhu programu budete vytvářet:</p>
+      </div>
+      <ul class="takeaway-grid">
+        <li>Vlastní konfigurace AI agentů</li>
+        <li>Znalostní báze pro konkrétní scénáře</li>
+        <li>Opakovaně použitelné šablony</li>
+        <li>Struktury pro práci koordinátora a subagenta</li>
+        <li>Řešení využívající více funkčních agentů</li>
+        <li>Vlastní aplikaci agentního systému na reálný pracovní scénář</li>
+      </ul>
+      <p class="intro-text" style="margin-bottom:0;">Získané znalosti a dovednosti jsou přenositelné napříč pracovními rolemi — od práce s informacemi a daty přes přípravu podkladů a podporu rozhodování až po koordinaci projektů a interní komunikaci.</p>
+    </div>
+  </section>
+
+  <!-- NEJDE O TECHNOLOGII PRO TECHNOLOGII -->
+  <section class="band-ink">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Filozofie programu</div>
+        <h2>Nejde o technologii pro technologii</h2>
+        <p>AI má pro firmu hodnotu až ve chvíli, kdy dokáže zlepšit způsob, jakým lidé skutečně pracují. Proto program nesoustředíme pouze na konkrétní nástroje. Zaměřujeme se především na principy, díky kterým dokážete AI:</p>
+      </div>
+      <ul class="checklist" style="--c:var(--paper);">
+        <li style="border-color:rgba(246,243,236,.15);color:rgba(246,243,236,.85);"><span class="mk">→</span>správně zadat úkol</li>
+        <li style="border-color:rgba(246,243,236,.15);color:rgba(246,243,236,.85);"><span class="mk">→</span>dodat potřebný kontext</li>
+        <li style="border-color:rgba(246,243,236,.15);color:rgba(246,243,236,.85);"><span class="mk">→</span>nastavit pravidla práce</li>
+        <li style="border-color:rgba(246,243,236,.15);color:rgba(246,243,236,.85);"><span class="mk">→</span>propojit s relevantními znalostmi</li>
+        <li style="border-color:rgba(246,243,236,.15);color:rgba(246,243,236,.85);"><span class="mk">→</span>kontrolovat její výstupy</li>
+        <li style="border-color:rgba(246,243,236,.15);color:rgba(246,243,236,.85);"><span class="mk">→</span>testovat její fungování</li>
+        <li style="border-color:rgba(246,243,236,.15);color:rgba(246,243,236,.85);grid-column:1/-1;"><span class="mk">→</span>a začlenit ji do konkrétního pracovního procesu</li>
+      </ul>
+      <p class="hero-callout" style="color:var(--brass-dim);margin-top:30px;">AI není hlavním hrdinou programu.<br>Hlavním hrdinou je lépe fungující obchodní, projektový nebo týmový proces.</p>
+    </div>
+  </section>
+
+  <!-- FINANCOVÁNÍ -->
+  <section id="financovani">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Financování</div>
+        <h2>Možnost financování vzdělávání</h2>
+        <p>Program může být při splnění podmínek financován s využitím veřejné podpory. Vzdělávací program je koncipován jako praktické vzdělávání zaměřené na rozvoj digitálních kompetencí a jejich přenos do každodenní pracovní praxe. Pro potřeby administrace je k dispozici obsahová struktura programu s přesně stanovenou hodinovou dotací jednotlivých tematických celků.</p>
+      </div>
+      <div class="meta-line">Rozsah programu: 56 hodin · Minimální povinná docházka: 80 %</div>
+      <div class="cta-row" style="margin-top:22px;">
+        <a href="#kontakt" class="btn btn-primary">Chci probrat program a možnost financování</a>
+      </div>
+      <p class="fine-print">Poskytnutí příspěvku není automatické ani nárokové a vždy závisí na aktuálních podmínkách konkrétního programu a posouzení příslušného poskytovatele podpory.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Nejčastější otázky</div>
+        <h2>Odpovědi, než se ozvete</h2>
+      </div>
+      <div class="faq">
+        <details open>
+          <summary>Jak dlouhý je vzdělávací program?<span class="plus">+</span></summary>
+          <div class="faq-a">Program má rozsah 56 hodin rozdělených do 6 výukových dnů.</div>
+        </details>
+        <details>
+          <summary>Musíme už AI aktivně používat?<span class="plus">+</span></summary>
+          <div class="faq-a">Není nutné mít předchozí zkušenost s vytvářením AI agentů. Program začíná obecnými principy práce s AI, postupně ale přechází k pokročilejším agentním systémům. Běžná uživatelská znalost digitálních pracovních nástrojů je vhodným předpokladem.</div>
+        </details>
+        <details>
+          <summary>Je nutné umět programovat?<span class="plus">+</span></summary>
+          <div class="faq-a">Ne. Program je zaměřen na konfiguraci AI agentů, promptování, práci s kontextem a znalostními bázemi, testování a návrh agentních systémů.</div>
+        </details>
+        <details>
+          <summary>Je program pouze pro obchodníky?<span class="plus">+</span></summary>
+          <div class="faq-a">Ne. Obchodní procesy jsou jednou z důležitých oblastí praktické aplikace, ale získané kompetence jsou využitelné také při projektovém řízení, práci s informacemi, přípravě podkladů, podpoře rozhodování a týmové komunikaci.</div>
+        </details>
+        <details>
+          <summary>Budeme pracovat pouze s jednou AI platformou?<span class="plus">+</span></summary>
+          <div class="faq-a">Ne. Součástí programu je testování řešení na více platformách a práce s rozdíly mezi jejich možnostmi.</div>
+        </details>
+        <details>
+          <summary>Budeme vytvářet vlastní AI agenty?<span class="plus">+</span></summary>
+          <div class="faq-a">Ano. Program postupuje od konfigurace jednoho agenta přes agentní systém se subagentem až k systému využívajícímu více funkčních agentů.</div>
+        </details>
+        <details>
+          <summary>Řeší program také bezpečnost a ochranu dat?<span class="plus">+</span></summary>
+          <div class="faq-a">Ano. Bezpečnost, ochrana dat a vyhodnocování výstupů jsou součástí programu a problematika bezpečnosti se řeší také při předávání informací mezi jednotlivými agenty.</div>
+        </details>
+        <details>
+          <summary>Je možné program přizpůsobit našemu oboru?<span class="plus">+</span></summary>
+          <div class="faq-a">Konkrétní pracovní scénáře, příklady a praktická aplikace mohou vycházet z potřeb daného týmu při zachování stanovené obsahové struktury vzdělávání.</div>
+        </details>
+        <details>
+          <summary>Je dotační podpora automatická?<span class="plus">+</span></summary>
+          <div class="faq-a">Ne. Případné poskytnutí podpory závisí na podmínkách konkrétního programu a posouzení příslušného poskytovatele podpory.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="closing">
+    <div class="wrap">
+      <div class="eyebrow center">Next.Level Academy</div>
+      <h2>Přestaňte AI pouze zkoušet. Začněte ji systematicky používat.</h2>
+      <p class="lede">Po šesti dnech nechceme, aby váš tým pouze uměl napsat lepší prompt. Chceme, aby dokázal rozpoznat vhodný pracovní scénář, nakonfigurovat pro něj AI agenta, vybavit jej správným kontextem a znalostmi, otestovat jeho fungování a postupně jej rozvíjet.</p>
+      <p class="hero-callout">Od jednotlivých promptů k vlastnímu funkčnímu AI systému.</p>
+      <div class="cta-row">
+        <a href="#kontakt" class="btn btn-primary">Chci probrat program pro náš tým</a>
+        <a href="#" class="btn btn-ghost">Stáhnout podrobný harmonogram</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT FORM -->
+  <section class="band" id="kontakt">
+    <div class="wrap">
+      <div class="form-grid">
+        <div>
+          <div class="eyebrow">Kontaktní formulář</div>
+          <h2>Pojďme zjistit, kde může AI nejvíc pomoci právě vám</h2>
+          <p style="color:var(--slate);font-size:14.5px;">Ozveme se vám a společně probereme vhodné nastavení programu pro váš tým, pracovní procesy a očekávané výsledky.</p>
+        </div>
+        <form id="contact-form">
+          <div class="field-row">
+            <div class="field"><label>Jméno a příjmení</label><input type="text" required></div>
+            <div class="field"><label>Firma</label><input type="text" required></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>E-mail</label><input type="email" required></div>
+            <div class="field"><label>Telefon — nepovinné</label><input type="tel"></div>
+          </div>
+          <div class="field"><label>Přibližný počet účastníků</label><input type="text"></div>
+          <div class="field"><label>Co chcete pomocí AI ve firmě zefektivnit?</label><textarea></textarea></div>
+          <div class="checkbox-row">
+            <input type="checkbox" id="dotace-check">
+            <label for="dotace-check">Mám zájem také o informace k možnosti financování vzdělávání</label>
+          </div>
+          <button type="submit" class="btn btn-primary">Chci probrat možnosti</button>
+          <p id="thanks">Děkujeme. Ozveme se vám a společně probereme vhodné nastavení programu pro váš tým, pracovní procesy a očekávané výsledky.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-inner">
+    <div>NextLevel Impact s.r.o., Ke Koupališti 1790/12, Praha 8<br>info@nextlevelimpact.eu · 602 300 220</div>
+    <div class="foot-links">
+      <a href="#">Facilitace</a>
+      <a href="#">Certifikáty</a>
+      <a href="#">Obchodní podmínky</a>
+      <a href="#">GDPR</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('contact-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('thanks').classList.add('show');
+    this.reset();
+  });
+</script>
+
+</body>
+</html>
