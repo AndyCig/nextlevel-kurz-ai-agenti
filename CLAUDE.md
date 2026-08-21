@@ -31,22 +31,31 @@ web a do hlavního webu je jen zavěšená přes subdoménu a položku v menu.
 
 ## Struktura repa
 - `index.html` — celá stránka, čisté HTML/CSS/JS v jednom souboru, žádný build
-  krok, žádné závislosti/frameworky. Fonty přes Google Fonts CDN (Fraunces +
-  IBM Plex Sans/Mono), žádné externí JS knihovny.
+  krok, žádné závislosti/frameworky. Písmo: systémová **Georgia** (texty) +
+  **Roboto** z Google Fonts (tlačítka). Žádné externí JS knihovny.
+- Obrázky v kořeni (servíruje je Cloudflare Pages přímo):
+  - `banner.jpg` — hero banner nahoře (Next.Level Akademie, portréty
+    Andrea + Martin, titulek kurzu, crimson podtržení)
+  - `logo-nextlevel.jpg` — logo v hlavičce (ořezaná bílá plocha z
+    „Logo Nextlevel.jpeg"); proklik vede na `https://nextlevelimpact.cz/`
+  - `Logo-213x213.jpg` — favicon
+  - `Logo Nextlevel.jpeg` — původní (neořezaný) zdroj loga, ponechán
 - `README.md` — stručný technický popis nasazení.
 
 ## Design systém (pro konzistenci při dalších úpravách)
-- Barvy: `--ink #161A22`, `--paper #F6F3EC`, `--paper-raise #EFEAE0`,
-  `--brass #9C7A2E` / `--brass-dim #C9A65C` (accent), `--slate #5B5F6B`,
-  `--line #DAD3C2`, `--moss #4B5D45`
-- Typografie: Fraunces (display/nadpisy), IBM Plex Sans (běžný text),
-  IBM Plex Mono (eyebrow labely, čísla, technické prvky — odkazuje na
-  "agent config" motiv obsahu)
-- Signature prvek: konzole v hero sekci zobrazující princip
-  CÍL→ROLE→KONTEXT→INSTRUKCE→ZNALOSTI→AKCE→KONTROLA (skutečný framework
-  z obsahu kurzu, ne generický dekor)
-- Vizuálně navazuje na nextlevelimpact.cz (stejná struktura hlavičky/patičky,
-  ale samostatná barevná paleta — vlastní subdoména, vlastní design vrstva)
+Paleta i písmo jsou **záměrně sladěné s domovským webem `nextlevelimpact.cz`**
+(dřívější kontrastní „editorial" paleta byla nahrazena na přání majitele).
+- Barvy: `--paper #FFFFFF`, `--paper-raise #FAFAFA`, akcent
+  `--brass #AC1C3A` (crimson) / `--brass-dim #CB4A62`, text `--ink #1B1B1B`,
+  `--slate #6A6A6A`, `--line #EAEAEA`. (Pozn.: proměnné si drží historické
+  názvy `--brass`/`--moss`, ale hodnoty jsou crimson — nezaměňovat za zlatou.)
+- Typografie: **Georgia** na nadpisy i běžný text (domovský web používá
+  Georgii, barvu textů kolem `#3D3D3D`), **Roboto** na tlačítka.
+- Hero: nahoře full-width `banner.jpg`, pod ním text na celou šířku.
+  (Dřívější „konzole" CÍL→ROLE→…→KONTROLA byla odstraněna dle podkladu —
+  titulek je teď součástí banneru, v HTML zůstává skrytě jako `<h1>` kvůli SEO.)
+- Hlavička: logo vlevo (proklik na hlavní web), vpravo navigace napojená na
+  reálné podstránky `nextlevelimpact.cz`.
 
 ## Obsah stránky
 Text vychází z dodaného podkladu `Na_vrh_obsahu_webu.docx` (obsahová
@@ -54,32 +63,39 @@ struktura, 5 modulů programu, FAQ, cílové skupiny, příklady agentů). Cílo
 manažeři/HR/office manažeři hledající vzdělávání pro tým, s důrazem na soulad
 s kritérii programu **Vzdělávání pro firmy** (up.gov.cz) a možností dotace.
 
-## Otevřené TODO (označené přímo v index.html jako `TODO(claude-code)`)
+Úpravy dle podkladu `zmeny_na_strance.pptx`:
+- Karta agenta „Funnel Guardian" → **„Osobní Kouč"** (tag „Osobní rozvoj")
+  s novým popisem.
+- Sekce „Pro koho je program určený" zúžena na 2 skupiny (Obchodníci,
+  Manažeři/team leadeři).
+- Kontaktní e-mail: `info@nextlevelimpact.cz` (dřív chybně `.eu`).
+- Hlavní kontaktní CTA „Kontaktujte nás" → `https://nextlevelimpact.cz/akad-info/`.
 
-1. **Kontaktní formulář (`#contact-form`) neodesílá data nikam.**
-   Dřívější verze měla JS, který jen předstíral úspěch (`preventDefault` +
-   zobrazení #thanks bez skutečného odeslání) — to bylo záměrně odstraněno,
-   ať formulář nepůsobí funkčně, když funkční není.
-   Doporučený postup: Formspree nebo Web3Forms (zdarma, bez vlastního
-   backendu) — založit účet, vložit endpoint do `action=` u `<form>`, přidat
-   `fetch()` volání s zobrazením `#thanks` až po skutečně úspěšné odpovědi.
-   Alternativy k zvážení: Cloudflare Pages Function s emailovým API (např.
-   Resend), nebo napojení na SmartEmailing (firma ho už používá pro
-   e-mailing — viz DKIM/CNAME záznamy na doméně, mohlo by to rovnou plnit
-   jejich kontaktní databázi).
+## Hotová TODO (historie)
+Původní `TODO(claude-code)` z `index.html` jsou vyřešená:
+1. Nefunkční kontaktní formulář **odstraněn**; místo něj reálný kontakt
+   (mailto/tel) a CTA na `nextlevelimpact.cz/akad-info/`.
+2. Tlačítka „Stáhnout podrobný harmonogram" **odstraněna** (PDF neexistovalo).
+3. Všechny slepé odkazy (`href="#"`) vyřešeny — menu i patička vedou na
+   reálné podstránky `nextlevelimpact.cz`.
 
-2. **"Stáhnout podrobný harmonogram" (2× na stránce) vede na mailto
-   placeholder**, protože žádný PDF harmonogram zatím neexistuje. Až bude
-   hotový (obsahová struktura s hodinovou dotací modulů je v `index.html`
-   sekci `#program`), nahradit oba výskyty odkazem na skutečný PDF soubor.
-
-3. Až bude formulář funkční, ověřit že `#thanks` zpráva se zobrazuje jen po
-   reálném úspěchu, ne při chybě odeslání (přidat i chybový stav).
+## Známé k dořešení / rozpracované
+- **Kontinuita hlavičky s Miowebem:** hlavní web má vyšší hlavičku (~202 px)
+  s vlastním menu (Next.Level Academy · Vyjednávání · Rodinné firmy · Rodinná
+  kontinuita · **Ženám** · O nás · LinkedIn · EN) a „pill" zvýrazněním aktivní
+  položky. Tahle stránka má vlastní, nižší hlavičku → přechod působí
+  nekonzistentně. Zvolený směr: **replikovat Mioweb hlavičku** na téhle
+  stránce (ne embedovat živé menu — to by znamenalo návrat do Miowebu se všemi
+  jeho omezeními, viz „Co to je"). K dořešení: přesný vzhled/chování hlavičky
+  + URL položek Ženám / LinkedIn / EN.
+- **Menu na hlavním webu:** odkaz na `kurz.nextlevelimpact.cz` stále chybí
+  v Mioweb navigaci (přidat ručně, mimo tenhle repozitář).
+- (Volitelně) PDF harmonogram — kdyby vznikl, lze přidat ke stažení.
 
 ## Co NEMĚNIT bez domluvy
 - Neposouvat DNS/custom doménu na jinou hodnotu bez koordinace s tím, kdo má
   přístup do Mioweb DNS správy (majitel: Ondřej / NextLevel Impact) — CNAME
   je nastavený ručně mimo tento repozitář a build zde ho nijak needituje.
-- Design tokeny (barvy/fonty) byly vědomě zvolené v kontrastu k obvyklým
-  AI-generated defaultům — při úpravách zachovat konzistenci, ne sáhnout po
-  genericích (cream+terakota, černá+neon apod.).
+- **Paleta a písmo jsou teď záměrně sladěné s domovským webem**
+  (bílá `#FFFFFF` / `#FAFAFA` + crimson `#AC1C3A`, Georgia + Roboto). Při
+  úpravách držet konzistenci s `nextlevelimpact.cz`, nesahat po genericích.
