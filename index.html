@@ -7,7 +7,7 @@
 <link rel="icon" type="image/jpeg" href="Logo-213x213.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#1B1B1B; --ink-soft:#3A3A3A; --paper:#FFFFFF; --paper-raise:#FAFAFA;
@@ -16,7 +16,7 @@
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,'Times New Roman',serif;-webkit-font-smoothing:antialiased;}
   img{max-width:100%;display:block;}
   a{color:inherit;text-decoration:none;}
   .wrap{max-width:1120px;margin:0 auto;padding:0 32px;}
@@ -36,13 +36,13 @@
   @media (max-width:900px){ nav{display:none;} .nav-toggle{display:block;} }
 
   /* ---------- generic type ---------- */
-  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--brass);display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .eyebrow{font-family:Georgia,'Times New Roman',serif;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--brass);display:flex;align-items:center;gap:10px;margin-bottom:16px;}
   .eyebrow::before{content:'';width:20px;height:1px;background:var(--brass);}
   .eyebrow.center{justify-content:center;}
   .eyebrow.center::before{display:none;}
-  h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(30px,4vw,46px);line-height:1.1;letter-spacing:-.01em;margin:0 0 20px;}
-  h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(23px,2.4vw,30px);line-height:1.2;margin:0 0 14px;}
-  h3{font-family:'Fraunces',serif;font-weight:500;font-size:18px;margin:0 0 8px;}
+  h1{font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(30px,4vw,46px);line-height:1.1;letter-spacing:-.01em;margin:0 0 20px;}
+  h2{font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(23px,2.4vw,30px);line-height:1.2;margin:0 0 14px;}
+  h3{font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:18px;margin:0 0 8px;}
   p{line-height:1.65;}
   .section-head{max-width:660px;margin-bottom:40px;}
   .section-head p{color:var(--slate);font-size:15px;margin:0;}
@@ -54,7 +54,7 @@
   .band-ink h2{color:var(--paper);}
   .band-ink .section-head p{color:rgba(255,255,255,.68);}
 
-  .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 24px;font-size:13px;letter-spacing:.02em;font-weight:500;border-radius:var(--radius);transition:background .2s,color .2s,border-color .2s;cursor:pointer;border:none;font-family:inherit;}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 24px;font-size:13px;letter-spacing:.02em;font-weight:500;border-radius:var(--radius);transition:background .2s,color .2s,border-color .2s;cursor:pointer;border:none;font-family:'Roboto',Arial,sans-serif;}
   .btn-primary{background:var(--ink);color:var(--paper);}
   .btn-primary:hover{background:var(--brass);}
   .band-ink .btn-primary{background:var(--brass);color:var(--ink);}
@@ -77,8 +77,8 @@
   .hero-copy{max-width:900px;}
   .lede{font-size:16.5px;line-height:1.65;color:var(--slate);max-width:48ch;margin:0 0 18px;}
   .hero-copy .lede{max-width:none;}
-  .hero-callout{font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--ink-soft);margin:0 0 22px;}
-  .meta-line{font-family:'IBM Plex Mono';font-size:12px;color:var(--brass);letter-spacing:.02em;margin-bottom:26px;}
+  .hero-callout{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:16px;color:var(--ink-soft);margin:0 0 22px;}
+  .meta-line{font-family:Georgia,'Times New Roman',serif;font-size:12px;color:var(--brass);letter-spacing:.02em;margin-bottom:26px;}
 
   /* ---------- two-col benefit lists ---------- */
   .intro-text{max-width:66ch;font-size:15.5px;color:var(--slate);margin-bottom:44px;}
@@ -91,7 +91,7 @@
 
   /* ---------- pipeline flow (horizontal chips) ---------- */
   .pipeline{display:flex;flex-wrap:wrap;align-items:center;gap:0;margin:28px 0;}
-  .pchip{font-family:'IBM Plex Mono';font-size:12px;letter-spacing:.04em;border:1px solid var(--line);padding:9px 14px;border-radius:20px;background:var(--paper);}
+  .pchip{font-family:Georgia,'Times New Roman',serif;font-size:12px;letter-spacing:.04em;border:1px solid var(--line);padding:9px 14px;border-radius:20px;background:var(--paper);}
   .parrow{color:var(--brass);padding:0 10px;font-size:13px;}
   .pipeline-note{font-size:14px;color:var(--slate);max-width:56ch;}
   .pipeline-note strong{color:var(--ink);}
@@ -100,27 +100,27 @@
   .checklist{display:grid;grid-template-columns:1fr 1fr;gap:10px 28px;}
   @media (max-width:720px){ .checklist{grid-template-columns:1fr;} }
   .checklist li{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;line-height:1.5;color:var(--ink-soft);padding:8px 0;border-bottom:1px solid var(--line);}
-  .checklist li .mk{font-family:'IBM Plex Mono';color:var(--brass);flex-shrink:0;font-size:13px;}
+  .checklist li .mk{font-family:Georgia,'Times New Roman',serif;color:var(--brass);flex-shrink:0;font-size:13px;}
 
   /* ---------- modules (numbered real sequence) ---------- */
   .modules{display:flex;flex-direction:column;}
   .module{display:grid;grid-template-columns:70px 110px 1fr;gap:20px;padding:24px 0;border-top:1px solid var(--line);}
   .modules .module:last-child{border-bottom:1px solid var(--line);}
   @media (max-width:700px){ .module{grid-template-columns:40px 1fr;} .module .hrs{grid-column:2;order:3;} }
-  .module .num{font-family:'IBM Plex Mono';font-size:13px;color:var(--brass);padding-top:2px;}
-  .module .hrs{font-family:'IBM Plex Mono';font-size:12px;color:var(--slate);padding-top:3px;}
+  .module .num{font-family:Georgia,'Times New Roman',serif;font-size:13px;color:var(--brass);padding-top:2px;}
+  .module .hrs{font-family:Georgia,'Times New Roman',serif;font-size:12px;color:var(--slate);padding-top:3px;}
   .module .hrs b{color:var(--ink);font-weight:600;}
   .module h3{font-size:17px;margin-bottom:6px;}
   .module p{font-size:14px;color:var(--slate);margin:0;max-width:62ch;}
   .modules-foot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-top:30px;padding-top:24px;border-top:1px solid var(--line);}
-  .modules-total{font-family:'IBM Plex Mono';font-size:12.5px;color:var(--slate);}
+  .modules-total{font-family:Georgia,'Times New Roman',serif;font-size:12.5px;color:var(--slate);}
   .modules-total b{color:var(--ink);}
 
   /* ---------- agent cards ---------- */
   .agent-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
   @media (max-width:700px){ .agent-grid{grid-template-columns:1fr;} }
   .agent-card{background:var(--paper);padding:28px 26px;}
-  .agent-card .tag{font-family:'IBM Plex Mono';font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--brass);background:var(--paper-raise);display:inline-block;padding:3px 8px;border-radius:20px;margin-bottom:12px;}
+  .agent-card .tag{font-family:Georgia,'Times New Roman',serif;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--brass);background:var(--paper-raise);display:inline-block;padding:3px 8px;border-radius:20px;margin-bottom:12px;}
   .agent-card h3{font-size:17px;margin-bottom:8px;}
   .agent-card p{font-size:14px;color:var(--slate);margin:0;}
   .scenario-note{margin-top:24px;font-size:13.5px;color:var(--slate);font-style:italic;max-width:70ch;}
@@ -141,9 +141,9 @@
   /* ---------- FAQ ---------- */
   .faq{border-top:1px solid var(--line);}
   details{border-bottom:1px solid var(--line);}
-  details summary{list-style:none;cursor:pointer;padding:20px 0;display:flex;justify-content:space-between;align-items:center;gap:20px;font-family:'Fraunces';font-size:16px;font-weight:500;}
+  details summary{list-style:none;cursor:pointer;padding:20px 0;display:flex;justify-content:space-between;align-items:center;gap:20px;font-family:Georgia,'Times New Roman',serif;font-size:16px;font-weight:500;}
   details summary::-webkit-details-marker{display:none;}
-  details summary .plus{font-family:'IBM Plex Mono';color:var(--brass);font-size:18px;transition:transform .2s;flex-shrink:0;}
+  details summary .plus{font-family:Georgia,'Times New Roman',serif;color:var(--brass);font-size:18px;transition:transform .2s;flex-shrink:0;}
   details[open] summary .plus{transform:rotate(45deg);}
   details .faq-a{padding:0 0 22px;font-size:14.5px;color:var(--slate);line-height:1.6;max-width:70ch;}
 
@@ -153,8 +153,8 @@
   .contact-actions{display:flex;flex-direction:column;}
   .contact-line{display:flex;flex-direction:column;gap:5px;padding:16px 0;border-bottom:1px solid var(--line);}
   .contact-line:first-child{border-top:1px solid var(--line);}
-  .contact-line .contact-label{font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--slate);}
-  .contact-line .contact-value{font-family:'Fraunces';font-size:20px;color:var(--ink);transition:color .2s;}
+  .contact-line .contact-label{font-family:Georgia,'Times New Roman',serif;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--slate);}
+  .contact-line .contact-value{font-family:Georgia,'Times New Roman',serif;font-size:20px;color:var(--ink);transition:color .2s;}
   a.contact-line:hover .contact-value{color:var(--brass);}
 
   /* ---------- closing ---------- */
